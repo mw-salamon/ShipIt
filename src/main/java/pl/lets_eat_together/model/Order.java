@@ -5,13 +5,14 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@EqualsAndHashCode
 @NoArgsConstructor
 @Entity
+@Table(name= "orders")
 public class Order extends Post{
 
     @Setter
@@ -26,14 +27,15 @@ public class Order extends Post{
     @Enumerated
     @Column(name = "status",
             nullable = false)
-    Status status;
+    Status status = Status.COLLECTING_SUBORDERS;
 
     @Setter
     @Column(nullable = false)
     String pickUpPlace;
 
+
     @Setter
     @Column(nullable = false)
-    int maxComments;
+    int maxComments = 3;
 
 }

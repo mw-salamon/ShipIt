@@ -3,8 +3,6 @@ package pl.lets_eat_together.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.lets_eat_together.dto.OrderDTO;
-//import pl.lets_eat_together.mapper.OrderMapper;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.repository.OrderRepository;
 
@@ -15,14 +13,11 @@ import java.util.Optional;
 public class OrderService {
 
     private final OrderRepository orderRepository;
-//    private final OrderMapper orderMapper;
 
     @Autowired
     public OrderService(@Qualifier("orderRepository") OrderRepository orderRepository
-//                        @Qualifier("orderMapperImpl") OrderMapper orderMapper) {
                         ) {
         this.orderRepository = orderRepository;
-//        this.orderMapper = orderMapper;
     }
 
     public List<Order> getAllOrders(){
@@ -36,10 +31,9 @@ public class OrderService {
 
     //TODO proper Exceptions classes
 
-//    public Order addNewOrder(OrderDTO newOrder){
-//        Order order = orderMapper.orderDTOToOrder(newOrder);
-//        return orderRepository.saveAndFlush(order);
-//    }
+    public Order addNewOrder(Order newOrder){
+        return orderRepository.saveAndFlush(newOrder);
+    }
 
     public String deleteOrder(Long id){
          Order order = getOrderById(id);

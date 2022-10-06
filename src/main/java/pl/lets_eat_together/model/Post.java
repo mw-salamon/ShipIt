@@ -2,21 +2,19 @@ package pl.lets_eat_together.model;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 @Getter
-@Setter
-@EqualsAndHashCode
-@NoArgsConstructor
-@Entity
-public class Post extends BaseEntity{
+@MappedSuperclass
+public abstract class Post extends BaseEntity{
 
-    @Setter(AccessLevel.NONE)
+    @Setter
     String meal;
 
+    @Setter
     @Column(name = "note",
-            length = 65535,
-            columnDefinition = "BLOB")
+            length = 65535)
     String note;
 
 }

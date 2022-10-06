@@ -3,7 +3,6 @@ package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -13,56 +12,54 @@ import com.vaadin.flow.router.Route;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.service.OrderService;
 
-import java.util.Collections;
+import java.util.List;
 
 @Route("orders")
 @PageTitle("Orders | Let's eat together")
 public class OrdersView extends VerticalLayout {
-    Grid<Order> grid = new Grid<>(Order.class);
     TextField filterText = new TextField();
-//        OrderForm form;
-    OrderService service;
+    OrderService orderService;
+
+    OrderForm form;
+
+    List<Order> orders;
+    VerticalLayout orderViews = new VerticalLayout();
 
     public OrdersView(OrderService service) {
-        this.service = service;
+        this.orderService = service;
+        updateList();
+
         addClassName("list-view");
         setSizeFull();
-        configureGrid();
+        configureList();
         configureForm();
 
         add(getToolbar(), getContent());
-        updateList();
-        System.out.println(
-                "HELOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
+
     }
 
     private Component getContent() {
-//            HorizontalLayout content = new HorizontalLayout(grid, form);
-        HorizontalLayout content = new HorizontalLayout(grid);
-        content.setFlexGrow(2, grid);
-//            content.setFlexGrow(1, form);
-        content.setFlexGrow(1);
+        HorizontalLayout content = new HorizontalLayout(orderViews, form);
+        content.setFlexGrow(2, orderViews);
+        content.setFlexGrow(1, form);
         content.addClassNames("content");
         content.setSizeFull();
         return content;
     }
 
     private void configureForm() {
-//            form = new ContactForm(service.findAllCompanies(), service.findAllStatuses());
-//            form.setWidth("25em");
+        form = new OrderForm( orderService);
+        form.setWidth("25em");
+        form.setVisible(false);
     }
 
-    private void configureGrid() {
-        grid.addClassNames("contact-grid");
-        grid.setSizeFull();
-        grid.setColumns("restaurant", "meal", "status", "callDeadline", "pickUpPlace", "maxComments");
-        grid.addColumn(order -> order.getRestaurant()).setHeader("Restaurant");
-        grid.addColumn(order -> order.getMeal()).setHeader("Meal");
-        grid.addColumn(order -> order.getStatus()).setHeader("Status");
-        grid.addColumn(order -> order.getCallDeadline()).setHeader("callDeadline");
-        grid.addColumn(order -> order.getPickUpPlace()).setHeader("pickUpPlace");
-        grid.addColumn(order -> order.getMaxComments()).setHeader("maxComments");
-        grid.getColumns().forEach(col -> col.setAutoWidth(true));
+    private void configureList() {
+        orderViews = new VerticalLayout();
+        orderViews.setAlignItems(Alignment.CENTER);
+        for (Order order: orders){
+            orderViews.add(new SingleOrderView(order));
+        }
     }
 
     private HorizontalLayout getToolbar() {
@@ -72,6 +69,7 @@ public class OrdersView extends VerticalLayout {
         filterText.addValueChangeListener(e -> updateList());
 
         Button addOrderButton = new Button("Add order");
+        addOrderButton.addClickListener(e -> form.setVisible(!form.isVisible()));
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addOrderButton);
         toolbar.addClassName("toolbar");
@@ -79,6 +77,12 @@ public class OrdersView extends VerticalLayout {
     }
 
     private void updateList() {
-        grid.setItems(service.getAllOrders());
+        orders = orderService.getAllOrders();
     }
+
+    public void reload(){
+        updateList();
+        configureList();
+    }
+
 }
