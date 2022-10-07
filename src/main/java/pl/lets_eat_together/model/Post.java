@@ -6,15 +6,15 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
 @Getter
+@Setter
 @MappedSuperclass
 public abstract class Post extends BaseEntity{
 
-    @Setter
     String meal;
 
-    @Setter
     @Column(name = "note",
-            length = 65535)
+            length = 65535,
+            columnDefinition = "TEXT")
     String note;
 
 }
