@@ -10,6 +10,8 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class Post extends BaseEntity{
 
+    @Column(name = "meal",
+            nullable = false)
     String meal;
 
     @Column(name = "note",
