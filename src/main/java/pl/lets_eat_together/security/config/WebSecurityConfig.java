@@ -42,6 +42,7 @@ public class WebSecurityConfig {
                 .authorizeRequests(auth -> {
                     try {
                         auth
+                                .antMatchers("/").permitAll()
                                 .antMatchers("/api/registration/*").permitAll()
                                 .anyRequest()
                                 .authenticated()
