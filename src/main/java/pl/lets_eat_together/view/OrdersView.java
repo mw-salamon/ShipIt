@@ -3,6 +3,7 @@ package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
@@ -10,23 +11,35 @@ import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import pl.lets_eat_together.model.Order;
-import pl.lets_eat_together.service.OrderService;
+import pl.lets_eat_together.service.*;
+import pl.lets_eat_together.user.UserService;
 
 import java.util.List;
 
 @Route("orders")
 @PageTitle("Orders | Let's eat together")
 public class OrdersView extends VerticalLayout {
+    Dialog dialog = new Dialog();
     TextField filterText = new TextField();
     OrderService orderService;
+    PaymentService paymentService;
+    OfficeService officeService;
+    UserModelService userModelService;
+    CommentService commentService;
 
     OrderForm form;
 
     List<Order> orders;
     VerticalLayout orderViews = new VerticalLayout();
 
-    public OrdersView(OrderService service) {
-        this.orderService = service;
+    public OrdersView(OrderService orderService, PaymentService paymentService, OfficeService officeService,
+                      UserModelService userModelService, CommentService commentService) {
+        this.orderService = orderService;
+        this.paymentService = paymentService;
+        this.officeService = officeService;
+        this.userModelService = userModelService;
+        this.commentService = commentService;
+        createDialog();
         updateList();
 
         addClassName("list-view");
@@ -49,7 +62,7 @@ public class OrdersView extends VerticalLayout {
     }
 
     private void configureForm() {
-        form = new OrderForm( orderService);
+        form = new OrderForm(orderService, paymentService, officeService, userModelService);
         form.setWidth("25em");
         form.setVisible(false);
     }
@@ -58,7 +71,8 @@ public class OrdersView extends VerticalLayout {
         orderViews = new VerticalLayout();
         orderViews.setAlignItems(Alignment.CENTER);
         for (Order order: orders){
-            orderViews.add(new SingleOrderView(order));
+            orderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+             this.paymentService, this.officeService, order));
         }
     }
 
@@ -69,7 +83,7 @@ public class OrdersView extends VerticalLayout {
         filterText.addValueChangeListener(e -> updateList());
 
         Button addOrderButton = new Button("Add order");
-        addOrderButton.addClickListener(e -> form.setVisible(!form.isVisible()));
+        addOrderButton.addClickListener(e -> dialog.open());
 
         HorizontalLayout toolbar = new HorizontalLayout(filterText, addOrderButton);
         toolbar.addClassName("toolbar");
@@ -83,6 +97,20 @@ public class OrdersView extends VerticalLayout {
     public void reload(){
         updateList();
         configureList();
+    }
+
+    private void createDialog(){
+        dialog.setHeaderTitle("Add a new order");
+        dialog.setWidth("40em");
+
+        OrderForm orderForm = new OrderForm(this.orderService, this.paymentService, this.officeService,
+                                            this.userModelService);
+        dialog.add(orderForm);
+
+        Button cancelButton = new Button("Cancel", e -> dialog.close());
+        dialog.getFooter().add(cancelButton);
+
+        add(dialog);
     }
 
 }

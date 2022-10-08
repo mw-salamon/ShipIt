@@ -1,6 +1,7 @@
 package pl.lets_eat_together.model;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -38,25 +39,35 @@ public class Order extends Post{
     private int maxComments = 3;
 
     @OneToMany(mappedBy = "order",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+               cascade = {CascadeType.MERGE, CascadeType.REMOVE}, fetch = FetchType.EAGER)
     private List<Comment> comments = new ArrayList<>();
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "user_id",
                 nullable = false)
     private UserModel user;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "office_id",
                 nullable = false)
     private Office office;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
     @JoinTable(name = "orders_to_payments",
                joinColumns = @JoinColumn(name = "order_id",
                                          referencedColumnName = "id"),
                inverseJoinColumns = @JoinColumn(name = "payment_id",
                                                 referencedColumnName = "id"))
     private Set<Payment> payments = new HashSet<>();
+
+
+    public String getAllPaymentMethods(){
+        StringBuilder paymentsMethods = new StringBuilder();
+        for (Payment payment: this.getPayments()) {
+            paymentsMethods.append(payment.toString())
+                           .append(", ");
+        }
+        return paymentsMethods.toString();
+    }
 
 }

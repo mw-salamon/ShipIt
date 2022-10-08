@@ -1,4 +1,4 @@
-package pl.lets_eat_together.registration;
+package pl.lets_eat_together.service;
 
 import org.springframework.stereotype.Service;
 

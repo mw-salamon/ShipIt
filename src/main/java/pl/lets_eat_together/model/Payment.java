@@ -3,6 +3,7 @@ package pl.lets_eat_together.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 @Entity
 @Table(name= "payments")
 public class Payment extends BaseEntity{
@@ -23,5 +25,11 @@ public class Payment extends BaseEntity{
     private String name;
 
     @ManyToMany(mappedBy = "payments")
+    @ToString.Exclude
     private Set<Order> orders = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
