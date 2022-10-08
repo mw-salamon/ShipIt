@@ -12,8 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.model.Order;
-import pl.lets_eat_together.service.CommentService;
-import pl.lets_eat_together.service.UserModelService;
+import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.User;
 
 import java.util.List;
@@ -21,23 +20,34 @@ import java.util.Objects;
 
 public class SingleOrderView extends VerticalLayout{
 
-    Dialog dialog = new Dialog();
+    Dialog addCommentDialog = new Dialog();
+    Dialog editOrderDialog = new Dialog();
     Order order;
 
     CommentService commentService;
     UserModelService userModelService;
+    PaymentService paymentService;
+
+    OfficeService officeService;
+    OrderService orderService;
 
     List<Comment> comments;
     VerticalLayout commentViews = new VerticalLayout();
 
-    SingleOrderView(CommentService commentService, UserModelService userModelService, Order order){
+    SingleOrderView(CommentService commentService, UserModelService userModelService, OrderService orderService,
+                    PaymentService paymentService, OfficeService officeService, Order order){
         this.order = order;
         this.commentService = commentService;
         this.userModelService = userModelService;
+        this.orderService = orderService;
+        this.paymentService = paymentService;
+        this.officeService = officeService;
 
         updateList();
         configureList();
-        createDialog();
+        createAddCommentDialog();
+        createEditOrderDialog();
+
 
         this.setAlignItems(Alignment.CENTER);
         add(new Html(("<span><b>Restaurant:</b> " + order.getRestaurant() +"</span>")));
@@ -53,7 +63,7 @@ public class SingleOrderView extends VerticalLayout{
 
         Span email = new Span(order.getUser().getEmail());
         email.getStyle().set("width", "100%");
-        Button addComment = new Button("Add your comment", e -> dialog.open());
+        Button addComment = new Button("Add your comment", e -> addCommentDialog.open());
         addComment.getStyle().set("width", "100%");
         addComment.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -63,13 +73,9 @@ public class SingleOrderView extends VerticalLayout{
         if(Objects.equals(userDetails.getUsername(), order.getUser().getEmail())){
             Button editOrder = new Button("Edit order");
             editOrder.getStyle().set("width", "100%");
+            editOrder.addClickListener(event -> editOrderDialog.open());
             bottomBar.add(editOrder);
-        }else{
-            Span span = new Span();
-            bottomBar.getStyle().set("width", "100%");
-            bottomBar.add(span);
         }
-
 
         add(bottomBar);
 
@@ -90,16 +96,16 @@ public class SingleOrderView extends VerticalLayout{
         this.comments = this.order.getComments();
     }
 
-    private void createDialog(){
-        dialog.setHeaderTitle("Add a comment, your suborder");
+    private void createAddCommentDialog(){
+        addCommentDialog.setHeaderTitle("Add a comment, your suborder");
 
         CommentForm commentForm = new CommentForm(this.commentService, this.userModelService, this.order);
-        dialog.add(commentForm);
+        addCommentDialog.add(commentForm);
 
-        Button cancelButton = new Button("Cancel", e -> dialog.close());
-        dialog.getFooter().add(cancelButton);
+        Button cancelButton = new Button("Cancel", e -> addCommentDialog.close());
+        addCommentDialog.getFooter().add(cancelButton);
 
-        add(dialog);
+        add(addCommentDialog);
     }
 
     private void configureList() {
@@ -108,5 +114,19 @@ public class SingleOrderView extends VerticalLayout{
         for (Comment comment: comments){
             commentViews.add(new SingleCommentView(comment));
         }
+    }
+
+    private void createEditOrderDialog(){
+        editOrderDialog.setHeaderTitle("Edit your order");
+        editOrderDialog.setWidth("40em");
+
+        EditStatusForm editOrderForm = new EditStatusForm(this.orderService, this.paymentService, this.officeService,
+                                            this.userModelService, this.order);
+        editOrderDialog.add(editOrderForm);
+
+        Button cancelButton = new Button("Cancel", e -> editOrderDialog.close());
+        editOrderDialog.getFooter().add(cancelButton);
+
+        add(editOrderDialog);
     }
 }

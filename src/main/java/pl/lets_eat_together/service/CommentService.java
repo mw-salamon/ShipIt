@@ -3,6 +3,7 @@ package pl.lets_eat_together.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import pl.lets_eat_together.exception.MaxCommentException;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.repository.CommentRepository;
 
@@ -34,8 +35,12 @@ public class CommentService {
 
     //TODO proper Exceptions classes
 
-    public Comment addNewComment(Comment newComment){
-        return commentRepository.saveAndFlush(newComment);
+    public Comment addNewComment(Comment newComment) throws MaxCommentException {
+        if (newComment.getOrder().getMaxComments() > (long) newComment.getOrder().getComments().size()){
+            return commentRepository.saveAndFlush(newComment);
+        }else{
+            throw new MaxCommentException();
+        }
     }
 
     public String deleteComment(Long id){
@@ -43,5 +48,6 @@ public class CommentService {
          commentRepository.delete(comment);
          return "Comment with id=" + id + " deleted";
     }
+
 
 }

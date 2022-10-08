@@ -1,10 +1,12 @@
 spring:
+  sql.init.mode: always
   datasource:
     url: jdbc:mariadb://localhost:3306/registration
     username:
     password:
 
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: update
     properties:
@@ -16,8 +18,8 @@ spring:
   mail:
     host: localhost
     port: 1025
-    username:
-    password:
+    username: admin
+    password: admin
 
     properties:
       mail:

@@ -14,6 +14,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import pl.lets_eat_together.exception.PastDateException;
 import pl.lets_eat_together.model.Office;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.model.Payment;
@@ -53,6 +54,7 @@ public class OrderForm extends FormLayout {
         this.userModelService = userModelService;
         this.office.setItems(officeService.getAllOffices());
         this.payment.setItems(paymentService.getAllPayments());
+
         save.addClickListener(event -> saveOrder());
         add(restaurant, meal, notes, callDeadline, pickUpPlace, office, payment, maxComments, save);
 
@@ -91,10 +93,15 @@ public class OrderForm extends FormLayout {
             notification = Notification.show("Udało się dodać ogłoszenie");
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             UI.getCurrent().getPage().reload();
+        }catch(PastDateException e){
+            notification = Notification.show("Wybierz datę w przyszłości");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            e.printStackTrace();
         }catch(Exception e){
             notification = Notification.show("Nie udało się dodać ogłoszenia");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             e.printStackTrace();
         }
     }
+
 }

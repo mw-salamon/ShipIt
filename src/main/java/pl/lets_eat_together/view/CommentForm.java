@@ -13,6 +13,7 @@ import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import pl.lets_eat_together.exception.MaxCommentException;
 import pl.lets_eat_together.model.*;
 import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.User;
@@ -68,6 +69,10 @@ public class CommentForm extends FormLayout {
             notification = Notification.show("Udało się dodać komentarz");
             notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
             UI.getCurrent().getPage().reload();
+        }catch(MaxCommentException e){
+            notification = Notification.show("Limit komentarzy został osiągnięty");
+            notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
+            e.printStackTrace();
         }catch(Exception e){
             notification = Notification.show("Nie udało się dodać komentarz");
             notification.addThemeVariants(NotificationVariant.LUMO_ERROR);

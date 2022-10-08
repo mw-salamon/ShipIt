@@ -71,7 +71,8 @@ public class OrdersView extends VerticalLayout {
         orderViews = new VerticalLayout();
         orderViews.setAlignItems(Alignment.CENTER);
         for (Order order: orders){
-            orderViews.add(new SingleOrderView(this.commentService, this.userModelService ,order));
+            orderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+             this.paymentService, this.officeService, order));
         }
     }
 
