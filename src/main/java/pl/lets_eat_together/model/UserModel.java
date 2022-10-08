@@ -1,8 +1,6 @@
 package pl.lets_eat_together.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,12 +9,15 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 @Entity
 @Table(name= "users")
 public class UserModel extends BaseEntity{
 
     @Column(name = "email",
-            nullable = false)
+            nullable = false,
+            unique = true)
     private String email;
 
     @Column(name = "password",
@@ -28,14 +29,16 @@ public class UserModel extends BaseEntity{
     private String firstName;
 
     @Column(name = "sure_name",
-            nullable = false)
+            nullable = true)
     private String sureName;
 
     @OneToMany(mappedBy = "user",
                cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @ToString.Exclude
     private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "user",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+               cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+    @ToString.Exclude
     private List<Order> orders = new ArrayList<>();
 }

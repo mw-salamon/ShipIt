@@ -7,8 +7,9 @@ import org.springframework.stereotype.Service;
 import pl.lets_eat_together.email.EmailSender;
 import pl.lets_eat_together.email.EmailTemplate;
 import pl.lets_eat_together.registration.token.ConfirmationToken;
-import pl.lets_eat_together.registration.token.ConfirmationTokenService;
 import pl.lets_eat_together.user.User;
+import pl.lets_eat_together.registration.token.ConfirmationTokenService;
+import pl.lets_eat_together.service.EmailValidator;
 import pl.lets_eat_together.user.UserService;
 
 import javax.transaction.Transactional;

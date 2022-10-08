@@ -11,14 +11,14 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name= "comments")
-public class Comment extends BaseEntity{
+public class Comment extends Post{
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "order_id",
                 nullable = false)
     private Order order;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(cascade = {CascadeType.MERGE})
     @JoinColumn(name = "user_id",
                 nullable = false)
     private UserModel user;

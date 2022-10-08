@@ -32,6 +32,12 @@ public class Office extends BaseEntity{
     private String name;
 
     @OneToMany(mappedBy = "office",
-               cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+               cascade = {CascadeType.MERGE, CascadeType.REMOVE})
     private List<Order> orders = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return city + ", " + street + " " + number + " " + name;
+    }
 }
+

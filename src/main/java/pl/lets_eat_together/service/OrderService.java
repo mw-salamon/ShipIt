@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.repository.OrderRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,8 +16,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Autowired
-    public OrderService(@Qualifier("orderRepository") OrderRepository orderRepository
-                        ) {
+    public OrderService(@Qualifier("orderRepository") OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
 
@@ -32,7 +32,14 @@ public class OrderService {
     //TODO proper Exceptions classes
 
     public Order addNewOrder(Order newOrder){
+
         return orderRepository.saveAndFlush(newOrder);
+    }
+
+    @Transactional
+    public Order updateOrderStatus(Order orderToUpdate) {
+        // Czy to poprawnie nadpisze istniejące rekordy?
+        return orderRepository.saveAndFlush(orderToUpdate);
     }
 
     public String deleteOrder(Long id){
