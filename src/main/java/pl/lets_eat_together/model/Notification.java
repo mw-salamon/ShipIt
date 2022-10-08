@@ -12,7 +12,7 @@ import javax.persistence.Table;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name= "orders")
+@Table(name= "notifications")
 public class Notification extends BaseEntity{
 
     @Column(name = "name",
