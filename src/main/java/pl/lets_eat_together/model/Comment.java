@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name= "comment")
+@Table(name= "comments")
 public class Comment extends BaseEntity{
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
