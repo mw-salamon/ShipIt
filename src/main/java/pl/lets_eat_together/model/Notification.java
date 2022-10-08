@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Entity
 @Table(name= "notifications")
-public class MailNotification extends BaseEntity{
+public class Notification extends BaseEntity{
 
     @Column(name = "name",
             nullable = false,

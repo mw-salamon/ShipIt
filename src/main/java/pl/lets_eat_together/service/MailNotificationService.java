@@ -3,7 +3,7 @@ package pl.lets_eat_together.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.lets_eat_together.model.MailNotification;
+import pl.lets_eat_together.model.Notification;
 import pl.lets_eat_together.repository.MailNotificationRepository;
 
 import java.util.List;
@@ -19,24 +19,24 @@ public class MailNotificationService {
         this.mailNotificationRepository = mailNotificationRepository;
     }
 
-    public List<MailNotification> getAllMailNotifications(){
+    public List<Notification> getAllMailNotifications(){
         return mailNotificationRepository.findAll();
     }
 
-    public MailNotification getMailNotificationById(Long id){
-        Optional<MailNotification> found = mailNotificationRepository.findById(id);
+    public Notification getMailNotificationById(Long id){
+        Optional<Notification> found = mailNotificationRepository.findById(id);
         return found.orElseThrow();
     }
 
     //TODO proper Exceptions classes
 
-    public MailNotification addMailNotification(MailNotification newMailNotification){
+    public Notification addMailNotification(Notification newMailNotification){
         return mailNotificationRepository.saveAndFlush(newMailNotification);
     }
 
 
     public String deleteMailNotification(Long id){
-         MailNotification mailNotification = getMailNotificationById(id);
+         Notification mailNotification = getMailNotificationById(id);
          mailNotificationRepository.delete(mailNotification);
          return "Notification with id=" + id + " deleted";
     }
