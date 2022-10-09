@@ -1,5 +1,7 @@
 package pl.lets_eat_together.view;
 
+import com.vaadin.flow.component.UI;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.router.Route;
 import pl.lets_eat_together.registration.RegistrationForm;
@@ -18,7 +20,16 @@ public class RegistrationView extends VerticalLayout {
         RegistrationFormBinder registrationFormBinder = new RegistrationFormBinder(registrationForm, registrationService);
         registrationFormBinder.addBindingAndValidation();
 
-        //TODO: add a button to log in for users who have accounts
+        loginButton();
+
+        add(loginButton());
+    }
+
+    private Button loginButton(){
+        Button button = new Button("LOG IN");
+        setHorizontalComponentAlignment(Alignment.CENTER, button);
+        button.addClickListener( e -> UI.getCurrent().navigate("login"));
+        return button;
     }
 }
 
