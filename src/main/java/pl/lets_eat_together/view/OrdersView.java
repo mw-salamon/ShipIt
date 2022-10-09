@@ -2,6 +2,7 @@ package pl.lets_eat_together.view;
 
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -30,10 +31,11 @@ public class OrdersView extends VerticalLayout {
     MailNotificationService mailNotificationService;
     StatusEmailService statusEmailService;
 
-    OrderForm form;
+    List<Order> openedOrders;
+    VerticalLayout openedOrderViews = new VerticalLayout();
 
-    List<Order> orders;
-    VerticalLayout orderViews = new VerticalLayout();
+    List<Order> closedOrders;
+    VerticalLayout closedOrderViews = new VerticalLayout();
 
     public OrdersView(OrderService orderService, PaymentService paymentService, OfficeService officeService,
                       UserModelService userModelService, CommentService commentService,
@@ -47,6 +49,7 @@ public class OrdersView extends VerticalLayout {
         this.mailNotificationService = mailNotificationService;
         createDialog();
         updateList();
+        updateClosedList();
 
         addClassName("list-view");
         setSizeFull();
@@ -62,20 +65,18 @@ public class OrdersView extends VerticalLayout {
     }
 
     private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(orderViews, form);
-        content.setFlexGrow(2, orderViews);
-        content.setFlexGrow(1, form);
-        content.addClassNames("content");
-        content.setSizeFull();
+        HorizontalLayout content = new HorizontalLayout(openedOrderViews);
+        content.setWidth("100%");
         return content;
     }
 
     private void configureList() {
         openedOrderViews = new VerticalLayout();
         openedOrderViews.setAlignItems(Alignment.CENTER);
-        for (Order order: openedOrders){
-            openedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
-             this.paymentService, this.officeService, order, this.statusEmailService, this.mailNotificationService));
+        for (Order order : openedOrders) {
+            openedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService, this.paymentService, this.officeService, order,
+                                                     this.statusEmailService, this.mailNotificationService));
+        }
     }
 
     private void configureClosedList() {
@@ -83,7 +84,7 @@ public class OrdersView extends VerticalLayout {
         closedOrderViews.setAlignItems(Alignment.CENTER);
         for (Order order: closedOrders){
             closedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
-                                                     this.paymentService, this.officeService, order));
+                                                     this.paymentService, this.officeService, order, this.statusEmailService, this.mailNotificationService));
         }
     }
 
