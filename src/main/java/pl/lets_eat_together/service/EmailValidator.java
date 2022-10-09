@@ -4,8 +4,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailValidator {
-    public boolean checkIfEmailIsCorrect(String s) {
-        //TODO Check if email is from Capgemini
-        return true;
+    public boolean checkIfEmailIsCorrect(String email) {
+        if(email.contains("capgemini.com")) {
+            return true;
+        }
+        return false;
     }
 }

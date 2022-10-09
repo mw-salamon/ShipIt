@@ -7,6 +7,7 @@ import pl.lets_eat_together.exception.MaxCommentException;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.repository.CommentRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +44,19 @@ public class CommentService {
         }
     }
 
+    @Transactional
+    public Comment updateComment(Comment comment){
+        Optional<Comment> foundComment = commentRepository.findById(comment.getId());
+        if(foundComment.isEmpty()){
+            throw new IllegalStateException("Comment doesn't exist, try again");
+        }
+        Comment commentFromRepository = foundComment.get();
+        commentFromRepository.setMeal(comment.getMeal());
+        commentFromRepository.setNote(comment.getNote());
+        return commentRepository.save(commentFromRepository);
+    }
+
+    @Transactional
     public String deleteComment(Long id){
          Comment comment = getCommentById(id);
          commentRepository.delete(comment);

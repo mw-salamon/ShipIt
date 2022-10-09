@@ -2,6 +2,7 @@ package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.Html;
 import com.vaadin.flow.component.accordion.Accordion;
+import com.vaadin.flow.component.avatar.Avatar;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.dialog.Dialog;
@@ -65,12 +66,13 @@ public class SingleOrderView extends VerticalLayout{
         add(new Html("<span><b>Payment methods:</b> " + order.getAllPaymentMethods() +"</span>"));
 
 
-        Span email = new Span(order.getUser().getEmail());
+        Span email = new Span(new Html("<span><b>Find me in MS Teams:</b> " + order.getUser().getEmail()));
+        Avatar avatarBasic = new Avatar();
         email.getStyle().set("width", "100%");
 
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        HorizontalLayout bottomBar = new HorizontalLayout(email);
+        HorizontalLayout bottomBar = new HorizontalLayout(avatarBasic, email);
         bottomBar.getStyle().set("width", "100%");
         if(Objects.equals(userDetails.getUsername(), order.getUser().getEmail())
                 && !order.getStatus().equals(Status.CLOSED)
@@ -128,7 +130,7 @@ public class SingleOrderView extends VerticalLayout{
         commentViews = new VerticalLayout();
         commentViews.setAlignItems(Alignment.CENTER);
         for (Comment comment: comments){
-            commentViews.add(new SingleCommentView(comment));
+            commentViews.add(new SingleCommentView(commentService, userModelService, order, comment));
         }
     }
 
