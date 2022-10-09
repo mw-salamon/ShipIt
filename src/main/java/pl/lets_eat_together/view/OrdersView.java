@@ -51,11 +51,14 @@ public class OrdersView extends VerticalLayout {
         addClassName("list-view");
         setSizeFull();
         configureList();
-        configureForm();
+        configureClosedList();
 
-        add(getToolbar(), getContent());
+        Accordion accordion = new Accordion();
+        accordion.getStyle().set("width", "100%");
+        accordion.close();
+        accordion.add("Closed / cancelled orders", closedOrderViews);
 
-
+        add(getToolbar(), getContent(), accordion);
     }
 
     private Component getContent() {
@@ -67,18 +70,20 @@ public class OrdersView extends VerticalLayout {
         return content;
     }
 
-    private void configureForm() {
-        form = new OrderForm(orderService, paymentService, officeService, userModelService);
-        form.setWidth("25em");
-        form.setVisible(false);
+    private void configureList() {
+        openedOrderViews = new VerticalLayout();
+        openedOrderViews.setAlignItems(Alignment.CENTER);
+        for (Order order: openedOrders){
+            openedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+             this.paymentService, this.officeService, order, this.statusEmailService, this.mailNotificationService));
     }
 
-    private void configureList() {
-        orderViews = new VerticalLayout();
-        orderViews.setAlignItems(Alignment.CENTER);
-        for (Order order: orders){
-            orderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
-             this.paymentService, this.officeService, order, this.statusEmailService, this.mailNotificationService));
+    private void configureClosedList() {
+        closedOrderViews = new VerticalLayout();
+        closedOrderViews.setAlignItems(Alignment.CENTER);
+        for (Order order: closedOrders){
+            closedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+                                                     this.paymentService, this.officeService, order));
         }
     }
 
@@ -97,7 +102,11 @@ public class OrdersView extends VerticalLayout {
     }
 
     private void updateList() {
-        orders = orderService.getAllOrders();
+        openedOrders = orderService.findAllOpenedOrders();
+    }
+
+    private void updateClosedList() {
+        closedOrders = orderService.findAllClosedOrCancelled();
     }
 
     public void reload(){

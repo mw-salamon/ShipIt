@@ -19,6 +19,10 @@ import pl.lets_eat_together.email.*;
 import pl.lets_eat_together.model.*;
 import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.User;
+import pl.lets_eat_together.service.OfficeService;
+import pl.lets_eat_together.service.OrderService;
+import pl.lets_eat_together.service.PaymentService;
+import pl.lets_eat_together.service.UserModelService;
 
 import javax.transaction.Transactional;
 
@@ -51,7 +55,6 @@ public class EditStatusForm extends FormLayout {
         this.officeService = officeService;
         this.userModelService = userModelService;
         this.office.setItems(officeService.getAllOffices());
-        this.payment.setItems(paymentService.getAllPayments());
         this.status.setItems(Status.values());
         this.statusEmailService = statusEmailService;
         this.mailNotificationService = mailNotificationService;
@@ -62,13 +65,12 @@ public class EditStatusForm extends FormLayout {
         callDeadline.setValue(order.getCallDeadline());
         pickUpPlace.setValue(order.getPickUpPlace());
         office.setValue(order.getOffice());
-        payment.select(order.getPayments());
         status.setValue(order.getStatus());
         maxComments.setValue((double) order.getMaxComments());
 
         save.addClickListener(event -> updateOrder(order));
 
-        add(restaurant, meal, notes, callDeadline, pickUpPlace, office, payment, status, maxComments, save);
+        add(restaurant, meal, notes, callDeadline, pickUpPlace, office, status, maxComments, save);
 
     }
 
@@ -113,7 +115,5 @@ public class EditStatusForm extends FormLayout {
             e.printStackTrace();
         }
     }
-
-
 
 }
