@@ -92,9 +92,7 @@ public class EditStatusForm extends FormLayout {
         order.setCallDeadline(callDeadline.getValue());
         order.setPickUpPlace(pickUpPlace.getValue());
         order.setOffice(office.getValue());
-        order.setPayments(payment.getValue());
         order.setStatus(status.getValue());
-        System.out.println(status.getValue());
         order.setMaxComments(maxComments.getValue().intValue());
 
         if(hasChanged){
