@@ -11,14 +11,11 @@ import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pl.lets_eat_together.model.*;
 import pl.lets_eat_together.service.OfficeService;
 import pl.lets_eat_together.service.OrderService;
 import pl.lets_eat_together.service.PaymentService;
 import pl.lets_eat_together.service.UserModelService;
-import pl.lets_eat_together.user.User;
 
 import javax.transaction.Transactional;
 
@@ -68,7 +65,7 @@ public class EditStatusForm extends FormLayout {
 
 
     @Transactional
-    private void updateOrder(Order order) {
+     void updateOrder(Order order) {
         order.setMeal(meal.getValue());
         order.setNote(notes.getValue());
         order.setRestaurant(restaurant.getValue());
