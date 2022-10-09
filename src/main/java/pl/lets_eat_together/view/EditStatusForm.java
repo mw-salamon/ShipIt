@@ -27,7 +27,6 @@ public class EditStatusForm extends FormLayout {
     DateTimePicker callDeadline = new DateTimePicker("Call deadline");
     TextField pickUpPlace = new TextField("Pick up place");
     ComboBox<Office> office = new ComboBox<>("Office");
-    MultiSelectListBox<Payment> payment = new MultiSelectListBox<>();
     ComboBox<Status> status = new ComboBox<>("Status");
     NumberField maxComments = new NumberField("Max comments");
 
@@ -44,7 +43,6 @@ public class EditStatusForm extends FormLayout {
         this.officeService = officeService;
         this.userModelService = userModelService;
         this.office.setItems(officeService.getAllOffices());
-        this.payment.setItems(paymentService.getAllPayments());
         this.status.setItems(Status.values());
 
         restaurant.setValue(order.getRestaurant());
@@ -53,13 +51,12 @@ public class EditStatusForm extends FormLayout {
         callDeadline.setValue(order.getCallDeadline());
         pickUpPlace.setValue(order.getPickUpPlace());
         office.setValue(order.getOffice());
-        payment.select(order.getPayments());
         status.setValue(order.getStatus());
         maxComments.setValue((double) order.getMaxComments());
 
         save.addClickListener(event -> updateOrder(order));
 
-        add(restaurant, meal, notes, callDeadline, pickUpPlace, office, payment, status, maxComments, save);
+        add(restaurant, meal, notes, callDeadline, pickUpPlace, office, status, maxComments, save);
 
     }
 
@@ -72,9 +69,7 @@ public class EditStatusForm extends FormLayout {
         order.setCallDeadline(callDeadline.getValue());
         order.setPickUpPlace(pickUpPlace.getValue());
         order.setOffice(office.getValue());
-        order.setPayments(payment.getValue());
         order.setStatus(status.getValue());
-        System.out.println(status.getValue());
         order.setMaxComments(maxComments.getValue().intValue());
 
         try{
