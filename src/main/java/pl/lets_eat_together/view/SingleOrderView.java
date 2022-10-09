@@ -12,6 +12,7 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.security.core.context.SecurityContextHolder;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.model.Order;
+import pl.lets_eat_together.model.Status;
 import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.User;
 
@@ -50,7 +51,7 @@ public class SingleOrderView extends VerticalLayout{
 
 
         this.setAlignItems(Alignment.CENTER);
-        add(new Html(("<span><b>Restaurant:</b> " + order.getRestaurant() +"</span>")));
+        add(new Html(("<span style=\"font-size:larger\"><b>Restaurant:</b> " + order.getRestaurant() +"</span>")));
         add(new Html("<span><b>Meal:</b> " + order.getMeal() +"</span>"));
         add(new Html("<span><b>Notes:</b> " + order.getNote() +"</span>"));
         add(new Html("<span><b>Call deadline:</b> " + order.getCallDeadline().toString() +"</span>"));
@@ -60,21 +61,26 @@ public class SingleOrderView extends VerticalLayout{
         add(new Html("<span><b>Payment methods:</b> " + order.getAllPaymentMethods() +"</span>"));
 
 
-
         Span email = new Span(order.getUser().getEmail());
         email.getStyle().set("width", "100%");
-        Button addComment = new Button("Add your comment", e -> addCommentDialog.open());
-        addComment.getStyle().set("width", "100%");
-        addComment.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+
         User userDetails = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        HorizontalLayout bottomBar = new HorizontalLayout(email, addComment);
+        HorizontalLayout bottomBar = new HorizontalLayout(email);
         bottomBar.getStyle().set("width", "100%");
-        if(Objects.equals(userDetails.getUsername(), order.getUser().getEmail())){
+        if(Objects.equals(userDetails.getUsername(), order.getUser().getEmail())
+                && !order.getStatus().equals(Status.CLOSED)
+                && !order.getStatus().equals(Status.CANCELED)){
             Button editOrder = new Button("Edit order");
             editOrder.getStyle().set("width", "100%");
             editOrder.addClickListener(event -> editOrderDialog.open());
             bottomBar.add(editOrder);
+        }else if (!order.getStatus().equals(Status.CLOSED)
+                && !order.getStatus().equals(Status.CANCELED)){
+            Button addComment = new Button("Add your comment", e -> addCommentDialog.open());
+            addComment.getStyle().set("width", "100%");
+            addComment.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+            bottomBar.add(addComment);
         }
 
         add(bottomBar);
@@ -90,6 +96,12 @@ public class SingleOrderView extends VerticalLayout{
         getStyle().set("border", "1px solid var(--lumo-primary-color)" );
         getStyle().set("border-radius", "var(--lumo-border-radius-l)");
         getStyle().set("width", "60%");
+
+        if(order.getStatus().equals(Status.CLOSED)){
+            getStyle().set("background-color", "var(--lumo-contrast-30pct)" );
+        }else if(order.getStatus().equals(Status.CANCELED)){
+            getStyle().set("background-color", "var(--lumo-error-color-50pct)" );
+        }
     }
 
     private void updateList() {
