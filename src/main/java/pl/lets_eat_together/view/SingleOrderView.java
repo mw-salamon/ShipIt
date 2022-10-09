@@ -16,6 +16,7 @@ import pl.lets_eat_together.model.Status;
 import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.User;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +58,7 @@ public class SingleOrderView extends VerticalLayout{
         add(new Html(("<span style=\"font-size:larger\"><b>Restaurant:</b> " + order.getRestaurant() +"</span>")));
         add(new Html("<span><b>Meal:</b> " + order.getMeal() +"</span>"));
         add(new Html("<span><b>Notes:</b> " + order.getNote() +"</span>"));
-        add(new Html("<span><b>Call deadline:</b> " + order.getCallDeadline().toString() +"</span>"));
+        add(new Html("<span><b>Call deadline:</b> " + order.getCallDeadline().format(DateTimeFormatter.ofPattern("hh:mm, dd MMMM YYYY")) +"</span>"));
         add(new Html("<span><b>Status:</b> " + order.getStatus().toString() +"</span>"));
         add(new Html("<span><b>Office:</b> " + order.getOffice().toString() +"</span>"));
         add(new Html("<span><b>Pick up place:</b> " + order.getPickUpPlace() +"</span>"));
