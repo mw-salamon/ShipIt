@@ -1,7 +1,6 @@
 package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -10,7 +9,6 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.security.core.context.SecurityContextHolder;
-import pl.lets_eat_together.email.EmailService;
 import pl.lets_eat_together.email.StatusEmailService;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.model.Order;
