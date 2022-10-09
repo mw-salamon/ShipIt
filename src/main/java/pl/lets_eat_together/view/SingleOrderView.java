@@ -1,7 +1,6 @@
 package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.Html;
-import com.vaadin.flow.component.Text;
 import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -112,7 +111,7 @@ public class SingleOrderView extends VerticalLayout{
         commentViews = new VerticalLayout();
         commentViews.setAlignItems(Alignment.CENTER);
         for (Comment comment: comments){
-            commentViews.add(new SingleCommentView(comment));
+            commentViews.add(new SingleCommentView(commentService, userModelService, order, comment));
         }
     }
 
