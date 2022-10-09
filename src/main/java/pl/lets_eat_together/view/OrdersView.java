@@ -2,6 +2,7 @@ package pl.lets_eat_together.view;
 
 
 import com.vaadin.flow.component.Component;
+import com.vaadin.flow.component.accordion.Accordion;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
@@ -27,10 +28,11 @@ public class OrdersView extends VerticalLayout {
     UserModelService userModelService;
     CommentService commentService;
 
-    OrderForm form;
+    List<Order> openedOrders;
+    VerticalLayout openedOrderViews = new VerticalLayout();
 
-    List<Order> orders;
-    VerticalLayout orderViews = new VerticalLayout();
+    List<Order> closedOrders;
+    VerticalLayout closedOrderViews = new VerticalLayout();
 
     public OrdersView(OrderService orderService, PaymentService paymentService, OfficeService officeService,
                       UserModelService userModelService, CommentService commentService) {
@@ -41,38 +43,42 @@ public class OrdersView extends VerticalLayout {
         this.commentService = commentService;
         createDialog();
         updateList();
+        updateClosedList();
 
         addClassName("list-view");
         setSizeFull();
         configureList();
-        configureForm();
+        configureClosedList();
 
-        add(getToolbar(), getContent());
+        Accordion accordion = new Accordion();
+        accordion.getStyle().set("width", "100%");
+        accordion.close();
+        accordion.add("Closed / cancelled orders", closedOrderViews);
 
-
+        add(getToolbar(), getContent(), accordion);
     }
 
     private Component getContent() {
-        HorizontalLayout content = new HorizontalLayout(orderViews, form);
-        content.setFlexGrow(2, orderViews);
-        content.setFlexGrow(1, form);
-        content.addClassNames("content");
-        content.setSizeFull();
+        HorizontalLayout content = new HorizontalLayout(openedOrderViews);
+        content.setWidth("100%");
         return content;
     }
 
-    private void configureForm() {
-        form = new OrderForm(orderService, paymentService, officeService, userModelService);
-        form.setWidth("25em");
-        form.setVisible(false);
+    private void configureList() {
+        openedOrderViews = new VerticalLayout();
+        openedOrderViews.setAlignItems(Alignment.CENTER);
+        for (Order order: openedOrders){
+            openedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+             this.paymentService, this.officeService, order));
+        }
     }
 
-    private void configureList() {
-        orderViews = new VerticalLayout();
-        orderViews.setAlignItems(Alignment.CENTER);
-        for (Order order: orders){
-            orderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
-             this.paymentService, this.officeService, order));
+    private void configureClosedList() {
+        closedOrderViews = new VerticalLayout();
+        closedOrderViews.setAlignItems(Alignment.CENTER);
+        for (Order order: closedOrders){
+            closedOrderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
+                                                     this.paymentService, this.officeService, order));
         }
     }
 
@@ -91,7 +97,11 @@ public class OrdersView extends VerticalLayout {
     }
 
     private void updateList() {
-        orders = orderService.getAllOrders();
+        openedOrders = orderService.findAllOpenedOrders();
+    }
+
+    private void updateClosedList() {
+        closedOrders = orderService.findAllClosedOrCancelled();
     }
 
     public void reload(){

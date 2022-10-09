@@ -5,12 +5,16 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.lets_eat_together.exception.PastDateException;
 import pl.lets_eat_together.model.Order;
+import pl.lets_eat_together.model.Status;
 import pl.lets_eat_together.repository.OrderRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class OrderService {
@@ -24,6 +28,25 @@ public class OrderService {
 
     public List<Order> getAllOrders(){
         return orderRepository.findAll();
+    }
+
+    public List<Order> findAllByOrderByCallDeadlineAsc(){
+        return orderRepository.findAllByOrderByCallDeadlineDesc();
+    }
+
+    public List<Order> findAllOpenedOrders(){
+        return Stream.of(orderRepository.findAllByStatusOrderByCallDeadlineDesc(Status.COLLECTING_SUBORDERS),
+                         orderRepository.findAllByStatusOrderByCallDeadlineDesc(Status.WAITING_FOR_REALISATION),
+                         orderRepository.findAllByStatusOrderByCallDeadlineDesc(Status.FOR_PICK_UP))
+                     .flatMap(Collection::stream)
+                     .collect(Collectors.toList());
+    }
+
+    public List<Order> findAllClosedOrCancelled(){
+        return Stream.of(orderRepository.findAllByStatusOrderByCallDeadlineDesc(Status.CLOSED),
+                         orderRepository.findAllByStatusOrderByCallDeadlineDesc(Status.CANCELED))
+                     .flatMap(Collection::stream)
+                     .collect(Collectors.toList());
     }
 
     public Order getOrderById(Long id){
