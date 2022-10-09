@@ -127,7 +127,7 @@ public class SingleOrderView extends VerticalLayout{
         commentViews = new VerticalLayout();
         commentViews.setAlignItems(Alignment.CENTER);
         for (Comment comment: comments){
-            commentViews.add(new SingleCommentView(comment));
+            commentViews.add(new SingleCommentView(commentService, userModelService, order, comment));
         }
     }
 

@@ -2,13 +2,9 @@ package pl.lets_eat_together.view;
 
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.combobox.ComboBox;
-import com.vaadin.flow.component.datetimepicker.DateTimePicker;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.listbox.MultiSelectListBox;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.notification.NotificationVariant;
-import com.vaadin.flow.component.textfield.NumberField;
 import com.vaadin.flow.component.textfield.TextArea;
 import com.vaadin.flow.component.textfield.TextField;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,7 +27,6 @@ public class CommentForm extends FormLayout {
     Notification notification;
     Order order;
 
-
     public CommentForm(CommentService commentService, UserModelService userModelService, Order order){
         this.commentService = commentService;
         this.userModelService = userModelService;
@@ -42,7 +37,7 @@ public class CommentForm extends FormLayout {
     }
 
     @Transactional
-    private void saveComment() {
+    void saveComment() {
         Comment newComment = new Comment();
         newComment.setMeal(meal.getValue());
         newComment.setNote(notes.getValue());
