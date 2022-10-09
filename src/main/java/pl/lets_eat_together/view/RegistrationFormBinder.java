@@ -64,7 +64,9 @@ public class RegistrationFormBinder {
 
                 showSuccess(user);
 
-            } catch (ValidationException exception) {
+            } catch (ValidationException | IllegalStateException exception) {
+                Notification notification = Notification.show("Register your account using Capgemini email");
+                notification.addThemeVariants(NotificationVariant.LUMO_ERROR);
             }
         });
     }
@@ -91,7 +93,7 @@ public class RegistrationFormBinder {
 
     private void showSuccess(User userBean) {
         Notification notification =
-                Notification.show("Thanks for joining us, " + userBean.getFirstName() + "!");
+                Notification.show("Thanks for joining us, " + userBean.getFirstName() + "! Check your email!");
         notification.addThemeVariants(NotificationVariant.LUMO_SUCCESS);
 
         // TODO: redirect the user to another view
