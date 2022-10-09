@@ -10,6 +10,8 @@ import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import org.springframework.security.core.context.SecurityContextHolder;
+import pl.lets_eat_together.email.EmailService;
+import pl.lets_eat_together.email.StatusEmailService;
 import pl.lets_eat_together.model.Comment;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.service.*;
@@ -27,21 +29,24 @@ public class SingleOrderView extends VerticalLayout{
     CommentService commentService;
     UserModelService userModelService;
     PaymentService paymentService;
-
     OfficeService officeService;
     OrderService orderService;
-
+    StatusEmailService statusEmailService;
+    MailNotificationService mailNotificationService;
     List<Comment> comments;
     VerticalLayout commentViews = new VerticalLayout();
 
     SingleOrderView(CommentService commentService, UserModelService userModelService, OrderService orderService,
-                    PaymentService paymentService, OfficeService officeService, Order order){
+                    PaymentService paymentService, OfficeService officeService, Order order,
+                    StatusEmailService statusEmailService, MailNotificationService mailNotificationService){
         this.order = order;
         this.commentService = commentService;
         this.userModelService = userModelService;
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.officeService = officeService;
+        this.statusEmailService = statusEmailService;
+        this.mailNotificationService = mailNotificationService;
 
         updateList();
         configureList();
@@ -121,7 +126,7 @@ public class SingleOrderView extends VerticalLayout{
         editOrderDialog.setWidth("40em");
 
         EditStatusForm editOrderForm = new EditStatusForm(this.orderService, this.paymentService, this.officeService,
-                                            this.userModelService, this.order);
+                                            this.userModelService, this.order, this.statusEmailService, this.mailNotificationService);
         editOrderDialog.add(editOrderForm);
 
         Button cancelButton = new Button("Cancel", e -> editOrderDialog.close());

@@ -5,6 +5,7 @@ import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -70,4 +71,11 @@ public class Order extends Post{
         return paymentsMethods.toString();
     }
 
+    @Override
+    public String toString() {
+        return "<div>Restaurant: " + restaurant + "</div>\n" + "<div>Deadline: " + callDeadline.format(DateTimeFormatter.ofPattern(
+                "dd MMMM, yyyy hh:mm a")) + "</div>\n" + "<div>Status: " + status + "</div>\n" +
+                "<div>Pick up place: " + pickUpPlace + "</div>\n" + "<div>Owner email: " + user.getEmail()+ "</div>\n" +
+                "<div>Office: " + office + "</div>\n" + "<div>Payment options: " + payments + "</div>\n" + "<div>Note: " + note + "</div>";
+    }
 }

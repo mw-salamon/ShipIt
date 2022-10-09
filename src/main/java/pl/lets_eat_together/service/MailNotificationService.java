@@ -28,6 +28,11 @@ public class MailNotificationService {
         return found.orElseThrow();
     }
 
+    public MailNotification getMailNotificationByName(String name){
+        Optional<MailNotification> found = mailNotificationRepository.findByName(name);
+        return found.orElseThrow();
+    }
+
     //TODO proper Exceptions classes
 
     public MailNotification addMailNotification(MailNotification newMailNotification){

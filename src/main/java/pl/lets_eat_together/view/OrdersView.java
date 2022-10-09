@@ -10,6 +10,7 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
+import pl.lets_eat_together.email.StatusEmailService;
 import pl.lets_eat_together.model.Order;
 import pl.lets_eat_together.service.*;
 import pl.lets_eat_together.user.UserService;
@@ -26,6 +27,8 @@ public class OrdersView extends VerticalLayout {
     OfficeService officeService;
     UserModelService userModelService;
     CommentService commentService;
+    MailNotificationService mailNotificationService;
+    StatusEmailService statusEmailService;
 
     OrderForm form;
 
@@ -33,12 +36,15 @@ public class OrdersView extends VerticalLayout {
     VerticalLayout orderViews = new VerticalLayout();
 
     public OrdersView(OrderService orderService, PaymentService paymentService, OfficeService officeService,
-                      UserModelService userModelService, CommentService commentService) {
+                      UserModelService userModelService, CommentService commentService,
+                      StatusEmailService statusEmailService, MailNotificationService mailNotificationService) {
         this.orderService = orderService;
         this.paymentService = paymentService;
         this.officeService = officeService;
         this.userModelService = userModelService;
         this.commentService = commentService;
+        this.statusEmailService = statusEmailService;
+        this.mailNotificationService = mailNotificationService;
         createDialog();
         updateList();
 
@@ -72,7 +78,7 @@ public class OrdersView extends VerticalLayout {
         orderViews.setAlignItems(Alignment.CENTER);
         for (Order order: orders){
             orderViews.add(new SingleOrderView(this.commentService, this.userModelService, this.orderService,
-             this.paymentService, this.officeService, order));
+             this.paymentService, this.officeService, order, this.statusEmailService, this.mailNotificationService));
         }
     }
 

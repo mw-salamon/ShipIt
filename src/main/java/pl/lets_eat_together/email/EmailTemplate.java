@@ -1,8 +1,19 @@
 package pl.lets_eat_together.email;
 
+import pl.lets_eat_together.model.Order;
+import pl.lets_eat_together.model.Status;
+import pl.lets_eat_together.service.MailNotificationService;
+
+
 public class EmailTemplate {
 
     private static final String CONFIRMATION_LINK = "http://localhost:8080/api/registration/confirm?token=";
+
+    MailNotificationService mailNotificationService;
+
+    public EmailTemplate(MailNotificationService mailNotificationService){
+        this.mailNotificationService = mailNotificationService;
+    }
 
     //TODO Modify the email template
     public static String buildEmail(String recipientName, String token){
@@ -72,5 +83,33 @@ public class EmailTemplate {
                 "  </tbody></table><div class=\"yj6qo\"></div><div class=\"adL\">\n" +
                 "\n" +
                 "</div></div>";
+    }
+
+    public String statusEmail(Status status, Order order){
+
+        switch (status){
+            case COLLECTING_SUBORDERS: {
+                return "<div><b>" + mailNotificationService.getMailNotificationByName(
+                        "COLLECTING_SUBORDERS_NOTIFICATION").getContent() + "</b></div>" +
+                        "\n" + order.toString();
+            }
+
+            case WAITING_FOR_REALISATION: {
+                return "<div><b>" + mailNotificationService.getMailNotificationByName("WAITING_FOR_REALISATION_NOTIFICATION").getContent() + "</b></div>\n" + order.toString();
+            }
+
+            case FOR_PICK_UP: {
+                return "<div><b>" + mailNotificationService.getMailNotificationByName("FOR_PICK_UP_NOTIFICATION").getContent() + "</b></div>\n" + order.toString();
+            }
+
+            case CLOSED: {
+                return "<div><b>" + mailNotificationService.getMailNotificationByName("CLOSED_NOTIFICATION").getContent() + "</b></div>\n" + order.toString();
+            }
+
+            case CANCELED: {
+                return "<div><b>" + mailNotificationService.getMailNotificationByName("CANCELED_NOTIFICATION").getContent() + "</b></div>\n" + order.toString();
+            }
+        }
+        return "Error :(";
     }
 }
